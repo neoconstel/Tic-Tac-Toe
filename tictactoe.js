@@ -40,6 +40,18 @@ let Gameboard = (function() {
             diagonals.push(buffer);
         })();
 
+
+        // get rightLeftDiagonal
+        (function() {
+            let startIndex = gridSize - 1;
+            let buffer = [startIndex];
+            while (buffer.length < gridSize)
+                buffer.push(buffer.slice(-1)[0] + gridSize - 1);
+
+            diagonals.push(buffer);
+        })();
+
+
     }
 
 
