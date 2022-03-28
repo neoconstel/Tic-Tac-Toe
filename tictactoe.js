@@ -20,6 +20,17 @@ let Gameboard = (function() {
             startIndex += gridSize;
         }
 
+        // get column indices
+        for (let i = 0, startIndex = 0; i < gridSize; i++) {
+            let buffer = [startIndex];
+            while (buffer.length < gridSize)
+                buffer.push(buffer.slice(-1)[0] + gridSize);
+            cols.push(buffer);
+            startIndex += 1;
+        }
+
+        console.table(cols);
+
     }
 
 
