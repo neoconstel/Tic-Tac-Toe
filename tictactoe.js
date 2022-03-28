@@ -9,14 +9,17 @@ let Gameboard = (function() {
 
         const NUM_GRIDS = gridSize ** 2;
 
-        // fill slots with unique identifier indices
+        // fill slots with null to show neutral state
         for (let i = 0; i < NUM_GRIDS; i++) {
-            slots.push(i);
+            slots.push(null);
         }
 
         // get row indices
         for (let i = 0, startIndex = 0; i < gridSize; i++) {
-            let buffer = slots.slice(startIndex, startIndex + gridSize);
+            let buffer = [startIndex];
+            while (buffer.length < gridSize)
+                buffer.push(buffer.slice(-1)[0] + 1);
+
             rows.push(buffer);
             startIndex += gridSize;
         }
@@ -60,9 +63,6 @@ let Gameboard = (function() {
         console.table(allSlotGroups);
     }
 
-
-
-
     return {
         init,
     }
@@ -70,4 +70,4 @@ let Gameboard = (function() {
 })();
 
 
-Gameboard.init(3);
+Gameboard.init(gridSize = 3);
