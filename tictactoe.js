@@ -3,6 +3,7 @@ let Gameboard = (function() {
     let rows = [];
     let cols = [];
     let diagonals = [];
+    let allSlotGroups = []; // union of rows, columns and diagonals
 
     function init(gridSize) {
 
@@ -51,7 +52,12 @@ let Gameboard = (function() {
             diagonals.push(buffer);
         })();
 
+        // get a union of all slot groups
+        allSlotGroups.push(...rows, ...cols, ...diagonals);
 
+        console.log(`\nAll slot groups for which winning is possible ` +
+            `(${allSlotGroups.length} possible ways):`)
+        console.table(allSlotGroups);
     }
 
 
