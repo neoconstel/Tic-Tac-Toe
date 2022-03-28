@@ -25,11 +25,20 @@ let Gameboard = (function() {
             let buffer = [startIndex];
             while (buffer.length < gridSize)
                 buffer.push(buffer.slice(-1)[0] + gridSize);
+
             cols.push(buffer);
             startIndex += 1;
         }
 
-        console.table(cols);
+        // get leftRightDiagonal
+        (function() {
+            let startIndex = 0;
+            let buffer = [startIndex];
+            while (buffer.length < gridSize)
+                buffer.push(buffer.slice(-1)[0] + gridSize + 1);
+
+            diagonals.push(buffer);
+        })();
 
     }
 
