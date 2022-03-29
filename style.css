@@ -1,0 +1,27 @@
+body {
+    display: grid;
+    grid-template: repeat(3, 1fr)/repeat(3, 1fr);
+}
+
+div.board {
+    grid-row: 2/3;
+    grid-column: 2/3;
+    display: grid;
+    grid-template: repeat(3, 60px) / repeat(3, 60px);
+    justify-content: center;
+    align-content: center;
+}
+
+.slot {
+    border: 1px dashed black;
+    text-align: center;
+    line-height: 300%;
+}
+
+.slot:hover {
+    background-color: gray;
+}
+
+.slot:active {
+    background-color: pink;
+}

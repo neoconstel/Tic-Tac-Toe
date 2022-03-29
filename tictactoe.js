@@ -61,6 +61,29 @@ let Gameboard = (function() {
         console.log(`\nAll slot groups for which winning is possible ` +
             `(${allSlotGroups.length} possible ways):`)
         console.table(allSlotGroups);
+
+
+        // create physical grids in html dom
+        (function() {
+            // first destroy all existing slots
+            document.querySelectorAll(".slot").forEach((slot) => {
+                slot.parentElement.removeChild(slot);
+            });
+
+            // proceed to create slots and add to board
+            for (let i = 0; i < NUM_GRIDS; i++) {
+                const slot = document.createElement("div");
+                slot.classList.add("slot");
+                slot.setAttribute("data-team", "");
+                document.querySelector(".board").appendChild(slot);
+            }
+
+            // adjust the CSS grid-template to match gridsize
+            document.querySelector(".board").style.gridTemplate =
+                `repeat(${gridSize}, 60px) / repeat(${gridSize}, 60px)`;
+
+        })();
+
     }
 
     return {
@@ -107,9 +130,9 @@ let p1 = Player.CreatePlayer(1, true);
 let p2 = Player.CreatePlayer(2, false);
 let p3 = Player.CreatePlayer(2, false);
 
-console.log("Player 1 id: " + p1.id);
-console.log("Player 2 id: " + p2.id);
-console.log("Player1 is human? " + p1.isHuman);
-console.log("Player2 is human? " + p2.isHuman);
-console.log("Number of players: " + Player.getNumPlayers());
-console.log("Number of Teams: " + Player.getNumTeams());
+// console.log("Player 1 id: " + p1.id);
+// console.log("Player 2 id: " + p2.id);
+// console.log("Player1 is human? " + p1.isHuman);
+// console.log("Player2 is human? " + p2.isHuman);
+// console.log("Number of players: " + Player.getNumPlayers());
+// console.log("Number of Teams: " + Player.getNumTeams());
