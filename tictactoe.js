@@ -74,7 +74,14 @@ let Gameboard = (function() {
             for (let i = 0; i < NUM_GRIDS; i++) {
                 const slot = document.createElement("div");
                 slot.classList.add("slot");
+                slot.setAttribute("data-slot", i);
                 slot.setAttribute("data-team", "");
+                slot.addEventListener("click", () => {
+                    let team = Player.currentPlayer.team;
+                    slots[Number(slot.getAttribute("data-slot"))] = team;
+                    slot.setAttribute("data-team", team);
+                    slot.textContent = team;
+                });
                 document.querySelector(".board").appendChild(slot);
             }
 
@@ -96,6 +103,7 @@ let Gameboard = (function() {
 let Player = (function() {
     let numPlayers = 0;
     let teams = [];
+    let currentPlayer = null;
 
     function CreatePlayer(team, isHuman) {
         player = Object.create(null);
@@ -104,6 +112,10 @@ let Player = (function() {
         player.team = team;
         if (!teams.includes(team))
             teams.push(team);
+
+        // this sets first player instance as the default currentPlayer
+        if (this.currentPlayer == null)
+            this.currentPlayer = player;
 
         return player;
     }
@@ -120,6 +132,7 @@ let Player = (function() {
         CreatePlayer,
         getNumPlayers,
         getNumTeams,
+        currentPlayer,
     };
 
 })();
