@@ -230,15 +230,24 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
             });
 
             // find if slotGroup is solely occupied by current cpu team  AND 
-            // only one slot left in slotGroup
-
+            // only one slot left in slotGroup (cpu says "check")
             let capturedSlots = slotGroup.filter((x) => {
                 return x == Player.currentPlayer.team;
             });
-
             // ... AND only one slot left in slotGroup...
             if (slotGroup.includes(null) && capturedSlots.length == Gameboard.boardGridSize - 1) {
-                console.log(`Player ${Player.currentPlayer.id} says "Check!"`);
+                console.log(`Cpu player ${Player.currentPlayer.id} says "Check!"`);
+            }
+
+
+            // find if slotGroup is solely occupied by another team  AND 
+            // only one slot left in slotGroup (cpu opponent says "check")
+            capturedSlots = slotGroup.filter((x) => {
+                return x && x != Player.currentPlayer.team;
+            });
+            // ... AND only one slot left in slotGroup
+            if (slotGroup.includes(null) && capturedSlots.length == Gameboard.boardGridSize - 1) {
+                console.log(`Cpu's opponent says "Check!"`);
             }
 
 
