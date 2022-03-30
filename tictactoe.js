@@ -145,44 +145,39 @@ let Player = (function() {
         return teams.length;
     }
 
+    function nextPlayer() {
+        // cycle sequentially through the list of players
+        let playerIndex = this.players.indexOf(this.currentPlayer);
+        playerIndex++;
+        if (playerIndex > this.players.length - 1)
+            playerIndex = 0;
+
+        this.currentPlayer = this.players[playerIndex];
+    }
+
     return {
         CreatePlayer,
         getNumPlayers,
         getNumTeams,
         currentPlayer,
         players,
+        nextPlayer,
     };
 
 })();
 
 
 Gameboard.init(gridSize = 3);
-let p1 = Player.CreatePlayer(1, true);
-let p2 = Player.CreatePlayer(2, false);
-let p3 = Player.CreatePlayer(2, false);
+let p1 = Player.CreatePlayer(1, isHuman = true);
+let p2 = Player.CreatePlayer(2, isHuman = false);
 
-// console.log("Player 1 id: " + p1.id);
-// console.log("Player 2 id: " + p2.id);
-// console.log("Player1 is human? " + p1.isHuman);
-// console.log("Player2 is human? " + p2.isHuman);
-// console.log("Number of players: " + Player.getNumPlayers());
-// console.log("Number of Teams: " + Player.getNumTeams());
 
 // -------------
 
 (function gamePlay() {
     window.addEventListener("click", () => {
-
         checkForWin(Gameboard);
-
-        // change player each turn. TODO: make to "cycle" players, not "toggle"
-        // them. Just in case there are more than 2 players.
-        if (Player.currentPlayer == p1)
-            Player.currentPlayer = p2;
-        else
-            Player.currentPlayer = p1;
-
-
+        Player.nextPlayer();
     });
 
     function checkForWin(gameBoard) {
@@ -193,15 +188,10 @@ let p3 = Player.CreatePlayer(2, false);
             slotGroup = slotGroup.map((x) => {
                 return slots[x];
             });
-            // console.table(slotGroup);
-
 
             let capturedSlots = slotGroup.filter((x) => {
                 return x == Player.currentPlayer.team;
             });
-            // console.table(capturedSlots);
-            // console.log("Length:" + capturedSlots.length);
-            // console.log("boardgridsize: " + gameBoard.boardGridSize);
 
             if (capturedSlots.length == gameBoard.boardGridSize) {
                 let winningTeam = Player.currentPlayer.team;
