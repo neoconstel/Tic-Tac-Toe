@@ -107,11 +107,24 @@ let Gameboard = (function() {
         return allSlotGroups.slice(0);
     }
 
+    // this function is for the cpu to play
+    function captureSlot(slotIndex) {
+        // ignore if the slot is already captured
+        if (slots[slotIndex])
+            return;
+
+        slots[slotIndex] = Player.currentPlayer.team;
+        let uiSlot = document.querySelector(`.slot[data-slot="${slotIndex}"`);
+        uiSlot.setAttribute("data-team", Player.currentPlayer.team);
+        uiSlot.textContent = Player.currentPlayer.team;
+    }
+
     return {
         init,
         getSlots,
         getSlotGroups,
         boardGridSize,
+        captureSlot,
     }
 
 })();
@@ -180,6 +193,8 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
 
     document.querySelectorAll(".slot").forEach((slot) => {
         slot.addEventListener("click", () => {
+            // TODO: only allow all this if slot hasn't been captured
+
             // only take human input if current player is human
             if (Player.currentPlayer.isHuman) {
                 playerTurn();
