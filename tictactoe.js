@@ -224,6 +224,9 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
         let slotGroups = Gameboard.getSlotGroups();
         let slots = Gameboard.getSlots();
 
+        let cpuAboutToWin = false;
+        let cpuOpponentAboutToWin = false;
+
         for (let indexSlotGroup of slotGroups) { // indexSlotGroup e.g [0, 3, 6] -- holds index
             let slotGroup = indexSlotGroup.map((x) => { // slotGroup e.g [1, 1, null] -- holds team
                 return slots[x];
@@ -236,6 +239,7 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
             });
             // ... AND only one slot left in slotGroup...
             if (slotGroup.includes(null) && capturedSlots.length == Gameboard.boardGridSize - 1) {
+                cpuAboutToWin = true;
                 console.log(`Cpu player ${Player.currentPlayer.id} says "Check!"`);
             }
 
@@ -247,10 +251,19 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
             });
             // ... AND only one slot left in slotGroup
             if (slotGroup.includes(null) && capturedSlots.length == Gameboard.boardGridSize - 1) {
+                cpuOpponentAboutToWin = true;
                 console.log(`Cpu's opponent says "Check!"`);
             }
 
 
+        }
+
+        if (cpuAboutToWin) {
+            // cpu should play into the final dominated slot and claim victory
+            console.log(`Cpu player ${Player.currentPlayer.id} hits it!`);
+        } else if (cpuOpponentAboutToWin) {
+            // cpu play into the final opposing slot and hinder opponent's win
+            console.log(`Cpu player ${Player.currentPlayer.id} defends!`)
         }
     }
 
