@@ -4,10 +4,12 @@ let Gameboard = (function() {
     let cols = [];
     let diagonals = [];
     let allSlotGroups = []; // union of rows, columns and diagonals
+    let boardGridSize;
 
     function init(gridSize) {
 
         const NUM_GRIDS = gridSize ** 2;
+        this.boardGridSize = gridSize;
 
         // fill slots with null to show neutral state
         for (let i = 0; i < NUM_GRIDS; i++) {
@@ -93,8 +95,21 @@ let Gameboard = (function() {
 
     }
 
+    function getSlots() {
+        // return a copy so it can't be modified from outside
+        return slots.slice(0);
+    }
+
+    function getSlotGroups() {
+        // return a copy so it can't be modified from outside
+        return allSlotGroups.slice(0);
+    }
+
     return {
         init,
+        getSlots,
+        getSlotGroups,
+        boardGridSize,
     }
 
 })();
@@ -103,6 +118,7 @@ let Gameboard = (function() {
 let Player = (function() {
     let numPlayers = 0;
     let teams = [];
+    let players = [];
     let currentPlayer = null;
 
     function CreatePlayer(team, isHuman) {
@@ -110,6 +126,7 @@ let Player = (function() {
         player.id = ++numPlayers;
         player.isHuman = isHuman;
         player.team = team;
+        players.push(player);
         if (!teams.includes(team))
             teams.push(team);
 
@@ -133,6 +150,7 @@ let Player = (function() {
         getNumPlayers,
         getNumTeams,
         currentPlayer,
+        players,
     };
 
 })();
@@ -149,3 +167,47 @@ let p3 = Player.CreatePlayer(2, false);
 // console.log("Player2 is human? " + p2.isHuman);
 // console.log("Number of players: " + Player.getNumPlayers());
 // console.log("Number of Teams: " + Player.getNumTeams());
+
+// -------------
+
+(function gamePlay() {
+    window.addEventListener("click", () => {
+
+        checkForWin(Gameboard);
+
+        // change player each turn. TODO: make to "cycle" players, not "toggle"
+        // them. Just in case there are more than 2 players.
+        if (Player.currentPlayer == p1)
+            Player.currentPlayer = p2;
+        else
+            Player.currentPlayer = p1;
+
+
+    });
+
+    function checkForWin(gameBoard) {
+        let slotGroups = gameBoard.getSlotGroups();
+        let slots = gameBoard.getSlots();
+
+        for (let slotGroup of slotGroups) {
+            slotGroup = slotGroup.map((x) => {
+                return slots[x];
+            });
+            // console.table(slotGroup);
+
+
+            let capturedSlots = slotGroup.filter((x) => {
+                return x == Player.currentPlayer.team;
+            });
+            // console.table(capturedSlots);
+            // console.log("Length:" + capturedSlots.length);
+            // console.log("boardgridsize: " + gameBoard.boardGridSize);
+
+            if (capturedSlots.length == gameBoard.boardGridSize) {
+                let winningTeam = Player.currentPlayer.team;
+                console.log(`Team ${winningTeam} wins!`);
+                break;
+            }
+        }
+    }
+})();
