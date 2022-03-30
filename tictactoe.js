@@ -79,10 +79,12 @@ let Gameboard = (function() {
                 slot.setAttribute("data-slot", i);
                 slot.setAttribute("data-team", "");
                 slot.addEventListener("click", () => {
-                    let team = Player.currentPlayer.team;
-                    slots[Number(slot.getAttribute("data-slot"))] = team;
-                    slot.setAttribute("data-team", team);
-                    slot.textContent = team;
+                    if (Player.currentPlayer.isHuman) {
+                        let team = Player.currentPlayer.team;
+                        slots[Number(slot.getAttribute("data-slot"))] = team;
+                        slot.setAttribute("data-team", team);
+                        slot.textContent = team;
+                    }
                 });
                 document.querySelector(".board").appendChild(slot);
             }
@@ -178,10 +180,48 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
 
     document.querySelectorAll(".slot").forEach((slot) => {
         slot.addEventListener("click", () => {
-            checkForWin(Gameboard);
-            Player.nextPlayer();
+            // only take human input if current player is human
+            if (Player.currentPlayer.isHuman) {
+                playerTurn();
+            }
         });
     });
+
+    let cpuTimer;
+    let gameLoop = setInterval(() => {
+        if (Player.currentPlayer.isHuman)
+        ; // do nothing, but wait for click from human player
+        else {
+            // make cpu play after a short pause to make the game more fun
+            if (!cpuTimer) {
+                cpuTimer = setTimeout(() => {
+                    playerTurn();
+                    clearTimeout(cpuTimer);
+                    cpuTimer = null;
+                }, 1000);
+            }
+
+        }
+    }, 100);
+
+    function playerTurn() {
+        let playerTeam = Player.currentPlayer.team;
+        let playerId = Player.currentPlayer.id;
+        let playerPersonality = Player.currentPlayer.isHuman ? "Human" : "Cpu";
+
+        // if player is cpu, play automatically
+        if (!Player.currentPlayer.isHuman)
+            cpuMove();
+
+        // what should happen after a move is made
+        console.log(`${playerPersonality} (player ${playerId} team ${playerTeam}) made a move`);
+        checkForWin(Gameboard);
+        Player.nextPlayer();
+    }
+
+    function cpuMove() {
+        console.log("A.I is playing...");
+    }
 
     function checkForWin(gameBoard) {
         let slotGroups = gameBoard.getSlotGroups();
@@ -203,4 +243,5 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
             }
         }
     }
+
 })();
