@@ -221,6 +221,28 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
 
     function cpuMove() {
         console.log("A.I is playing...");
+        let slotGroups = Gameboard.getSlotGroups();
+        let slots = Gameboard.getSlots();
+
+        for (let indexSlotGroup of slotGroups) { // indexSlotGroup e.g [0, 3, 6] -- holds index
+            let slotGroup = indexSlotGroup.map((x) => { // slotGroup e.g [1, 1, null] -- holds team
+                return slots[x];
+            });
+
+            // find if slotGroup is solely occupied by current cpu team  AND 
+            // only one slot left in slotGroup
+
+            let capturedSlots = slotGroup.filter((x) => {
+                return x == Player.currentPlayer.team;
+            });
+
+            // ... AND only one slot left in slotGroup...
+            if (slotGroup.includes(null) && capturedSlots.length == Gameboard.boardGridSize - 1) {
+                console.log(`Player ${Player.currentPlayer.id} says "Check!"`);
+            }
+
+
+        }
     }
 
     function checkForWin(gameBoard) {
