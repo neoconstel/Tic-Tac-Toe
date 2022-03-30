@@ -175,9 +175,12 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
 // -------------
 
 (function gamePlay() {
-    window.addEventListener("click", () => {
-        checkForWin(Gameboard);
-        Player.nextPlayer();
+
+    document.querySelectorAll(".slot").forEach((slot) => {
+        slot.addEventListener("click", () => {
+            checkForWin(Gameboard);
+            Player.nextPlayer();
+        });
     });
 
     function checkForWin(gameBoard) {
