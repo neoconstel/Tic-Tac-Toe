@@ -325,11 +325,17 @@ function gamePlay() {
 
 
             // test #3
-            // find if slotGroup is not occupied by opponent in any of its slots
-            capturedSlots = slotGroup.filter((x) => {
+            // slotGroup is not occupied by opponent in any of its slots
+            let unOpposingSlots = slotGroup.filter((x) => {
                 return x == null || x == Player.currentPlayer.team;
             });
-            if (capturedSlots.length >= maxSoloGroup.length) {
+
+            // slotGroup is only occupied by current cpu
+            capturedSlots = slotGroup.filter((x) => {
+                return x == Player.currentPlayer.team;
+            });
+
+            if (unOpposingSlots.length == Gameboard.boardGridSize && capturedSlots.length >= maxSoloGroup.length) {
                 maxSoloGroup.indexSlotGroup = indexSlotGroup.slice(0);
                 maxSoloGroup.length = capturedSlots.length;
             }
@@ -366,6 +372,7 @@ function gamePlay() {
         } else {
             // opponent has at least a slot in every group, so just play
             // randomly into any vacant slot. This should lead to a tie
+            console.log("AI meets dead-end. Playing into any empty slot");
             for (let slotIndex in Gameboard.getSlots()) {
                 if (Gameboard.getSlots()[slotIndex] == null) {
                     Gameboard.captureSlot(slotIndex);
