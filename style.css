@@ -1,5 +1,6 @@
 body {
     text-align: center;
+    background-image: linear-gradient(30deg, mediumpurple 0%, skyblue 100%);
 }
 
 div.board {
