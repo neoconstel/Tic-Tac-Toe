@@ -346,6 +346,10 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
             if (capturedSlots.length == gameBoard.boardGridSize) {
                 let winningTeam = Player.currentPlayer.team;
                 console.log(`Team ${winningTeam} wins!`);
+
+                // display winner on UI
+                document.querySelector(".winner-display").textContent =
+                    `Player ${Player.currentPlayer.id} Wins!`;
                 break;
             }
         }
