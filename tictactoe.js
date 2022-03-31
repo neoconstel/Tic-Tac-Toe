@@ -175,14 +175,15 @@ let Player = (function() {
 })();
 
 
-Gameboard.init(gridSize = 3);
-let p1 = Player.CreatePlayer(1, isHuman = true);
-let p2 = Player.CreatePlayer(2, isHuman = false);
-
 
 // -------------
 
 (function gamePlay() {
+
+    let gridSize = Number(document.querySelector(".grid-size").value);
+    Gameboard.init(gridSize = gridSize);
+    let p1 = Player.CreatePlayer(1, isHuman = true);
+    let p2 = Player.CreatePlayer(2, isHuman = false);
 
     let gameEnded = false;
 
@@ -235,7 +236,7 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
 
         // what should happen after a move is made
         console.log(`${playerPersonality} (player ${playerId} team ${playerTeam}) made a move`);
-        checkForWin(Gameboard);
+        checkForWin();
         Player.nextPlayer();
     }
 
@@ -340,9 +341,9 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
         }
     }
 
-    function checkForWin(gameBoard) {
-        let slotGroups = gameBoard.getSlotGroups();
-        let slots = gameBoard.getSlots();
+    function checkForWin() {
+        let slotGroups = Gameboard.getSlotGroups();
+        let slots = Gameboard.getSlots();
 
         for (let slotGroup of slotGroups) {
             slotGroup = slotGroup.map((x) => {
@@ -353,7 +354,7 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
                 return x == Player.currentPlayer.team;
             });
 
-            if (capturedSlots.length == gameBoard.boardGridSize) {
+            if (capturedSlots.length == Gameboard.boardGridSize) {
                 let winningTeam = Player.currentPlayer.team;
                 console.log(`Team ${winningTeam} wins!`);
 
