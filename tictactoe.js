@@ -296,12 +296,21 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
             // cpu play into the final opposing slot and hinder opponent's win
             console.log(`Cpu player ${Player.currentPlayer.id} defends!`)
         } else if (maxSoloGroup.indexSlotGroup != null) {
-            // get a null slot in the group and capture it
+            // this means there is a group solo-owned and most-captured by cpu, 
+            // so get a null slot in the group and capture it to increase dominance
             console.log("AI playing into max solo group...");
             for (let slotIndex of maxSoloGroup.indexSlotGroup) {
                 if (Gameboard.getSlots()[slotIndex] == null) {
                     Gameboard.captureSlot(slotIndex);
                     break;
+                }
+            }
+        } else {
+            // opponent has at least a slot in every group, so just play
+            // randomly into any vacant slot. This should lead to a tie
+            for (let slotIndex in Gameboard.getSlots()) {
+                if (Gameboard.getSlots()[slotIndex] == null) {
+                    Gameboard.captureSlot(slotIndex);
                 }
             }
         }
