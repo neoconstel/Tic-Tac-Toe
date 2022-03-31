@@ -184,8 +184,14 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
 
 (function gamePlay() {
 
+    let gameEnded = false;
+
     document.querySelectorAll(".slot").forEach((slot) => {
         slot.addEventListener("click", () => {
+            // abort if game has ended
+            if (gameEnded)
+                return;
+
             // abort if slot has been captured
             let slotIndex = slot.getAttribute("data-slot");
             if (Gameboard.getSlots()[slotIndex])
@@ -234,6 +240,10 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
     }
 
     function cpuMove() {
+        // abort if game ended
+        if (gameEnded)
+            return;
+
         console.log("A.I is playing...");
 
         let cpuAboutToWin = false;
@@ -347,11 +357,23 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
                 let winningTeam = Player.currentPlayer.team;
                 console.log(`Team ${winningTeam} wins!`);
 
+                // register that the game has ended
+                gameEnded = true;
+
                 // display winner on UI
                 document.querySelector(".winner-display").textContent =
                     `Player ${Player.currentPlayer.id} Wins!`;
                 break;
             }
+        }
+        // if there was no winner in the turn and slots filled, it's a draw
+        if (!Gameboard.getSlots().includes(null)) {
+            // register that the game has ended
+            gameEnded = true;
+
+            // display that it's a draw
+            document.querySelector(".winner-display").textContent =
+                `It's a Draw!`;
         }
     }
 
