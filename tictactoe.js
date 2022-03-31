@@ -1,12 +1,18 @@
 let Gameboard = (function() {
-    let slots = [];
-    let rows = [];
-    let cols = [];
-    let diagonals = [];
-    let allSlotGroups = []; // union of rows, columns and diagonals
+    let slots;
+    let rows;
+    let cols;
+    let diagonals;
+    let allSlotGroups; // union of rows, columns and diagonals
     let boardGridSize;
 
     function init(gridSize) {
+
+        slots = [];
+        rows = [];
+        cols = [];
+        diagonals = [];
+        allSlotGroups = [];
 
         const NUM_GRIDS = gridSize ** 2;
         this.boardGridSize = gridSize;
@@ -163,6 +169,13 @@ let Player = (function() {
         this.currentPlayer = this.players[playerIndex];
     }
 
+    function init() {
+        numPlayers = 0;
+        teams = [];
+        players = [];
+        currentPlayer = null;
+    }
+
     return {
         CreatePlayer,
         getNumPlayers,
@@ -170,6 +183,7 @@ let Player = (function() {
         currentPlayer,
         players,
         nextPlayer,
+        init,
     };
 
 })();
@@ -177,11 +191,31 @@ let Player = (function() {
 
 
 // -------------
+let cpuTimer;
+let gameLoop;
 
-(function gamePlay() {
+document.querySelector(".new-game").addEventListener("click", () => {
+    clearTimeout(cpuTimer);
+    cpuTimer = null;
+
+    clearInterval(gameLoop);
+    gameLoop = null;
+
+    document.querySelector(".winner-display").textContent = "";
+
+    Player.init();
+
+    console.log("\n\n-----New Game Started-----\n\n");
+    gamePlay();
+});
+
+gamePlay();
+
+function gamePlay() {
 
     let gridSize = Number(document.querySelector(".grid-size").value);
     Gameboard.init(gridSize = gridSize);
+
     let p1 = Player.CreatePlayer(1, isHuman = true);
     let p2 = Player.CreatePlayer(2, isHuman = false);
 
@@ -208,8 +242,7 @@ let Player = (function() {
         });
     });
 
-    let cpuTimer;
-    let gameLoop = setInterval(() => {
+    gameLoop = setInterval(() => {
         if (Player.currentPlayer.isHuman)
         ; // do nothing, but wait for click from human player
         else {
@@ -378,4 +411,4 @@ let Player = (function() {
         }
     }
 
-})();
+};
