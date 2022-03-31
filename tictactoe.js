@@ -1,3 +1,5 @@
+// ----------------------modules and functions----------------------
+
 let Gameboard = (function() {
     let slots;
     let rows;
@@ -188,28 +190,6 @@ let Player = (function() {
 
 })();
 
-
-
-// -------------
-let cpuTimer;
-let gameLoop;
-
-document.querySelector(".new-game").addEventListener("click", () => {
-    clearTimeout(cpuTimer);
-    cpuTimer = null;
-
-    clearInterval(gameLoop);
-    gameLoop = null;
-
-    document.querySelector(".winner-display").textContent = "";
-
-    Player.init();
-
-    console.log("\n\n-----New Game Started-----\n\n");
-    gamePlay();
-});
-
-gamePlay();
 
 function gamePlay() {
 
@@ -419,3 +399,26 @@ function gamePlay() {
     }
 
 };
+
+
+// ----------------------initializer----------------------
+
+let cpuTimer;
+let gameLoop;
+
+document.querySelector(".new-game").addEventListener("click", () => {
+    clearTimeout(cpuTimer);
+    cpuTimer = null;
+
+    clearInterval(gameLoop);
+    gameLoop = null;
+
+    document.querySelector(".winner-display").textContent = "";
+
+    Player.init();
+
+    console.log("\n\n-----New Game Started-----\n\n");
+    gamePlay();
+});
+
+gamePlay();
