@@ -236,17 +236,21 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
 
     function cpuMove() {
         console.log("A.I is playing...");
-        let slotGroups = Gameboard.getSlotGroups();
-        let slots = Gameboard.getSlots();
 
         let cpuAboutToWin = false;
         let cpuOpponentAboutToWin = false;
 
-        for (let indexSlotGroup of slotGroups) { // indexSlotGroup e.g [0, 3, 6] -- holds index
+        let maxSoloGroup = {
+            length: 0,
+            indexSlotGroup: null
+        };
+
+        for (let indexSlotGroup of Gameboard.getSlotGroups()) { // indexSlotGroup e.g [0, 3, 6] -- holds index
             let slotGroup = indexSlotGroup.map((x) => { // slotGroup e.g [1, 1, null] -- holds team
-                return slots[x];
+                return Gameboard.getSlots()[x];
             });
 
+            // test #1
             // find if slotGroup is solely occupied by current cpu team  AND 
             // only one slot left in slotGroup (cpu says "check")
             let capturedSlots = slotGroup.filter((x) => {
@@ -259,7 +263,8 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
             }
 
 
-            // find if slotGroup is solely occupied by another team  AND 
+            // test #2
+            // find if slotGroup is solely occupied by opposing team  AND 
             // only one slot left in slotGroup (cpu opponent says "check")
             capturedSlots = slotGroup.filter((x) => {
                 return x && x != Player.currentPlayer.team;
@@ -271,6 +276,17 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
             }
 
 
+            // test #3
+            // find if slotGroup is not occupied by opponent in any of its slots
+            capturedSlots = slotGroup.filter((x) => {
+                return x == null || x == Player.currentPlayer.team;
+            });
+            if (capturedSlots.length >= maxSoloGroup.length) {
+                maxSoloGroup.indexSlotGroup = indexSlotGroup.slice(0);
+                maxSoloGroup.length = capturedSlots.length;
+            }
+
+
         }
 
         if (cpuAboutToWin) {
@@ -279,6 +295,15 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
         } else if (cpuOpponentAboutToWin) {
             // cpu play into the final opposing slot and hinder opponent's win
             console.log(`Cpu player ${Player.currentPlayer.id} defends!`)
+        } else if (maxSoloGroup.indexSlotGroup != null) {
+            // get a null slot in the group and capture it
+            console.log("AI playing into max solo group...");
+            for (let slotIndex of maxSoloGroup.indexSlotGroup) {
+                if (Gameboard.getSlots()[slotIndex] == null) {
+                    Gameboard.captureSlot(slotIndex);
+                    break;
+                }
+            }
         }
     }
 
