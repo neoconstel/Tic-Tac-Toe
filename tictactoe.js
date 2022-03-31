@@ -240,6 +240,9 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
         let cpuAboutToWin = false;
         let cpuOpponentAboutToWin = false;
 
+        let cpuWinningIndexSlotGroup;
+        let cpuOpponentWinningIndexSlotGroup;
+
         let maxSoloGroup = {
             length: 0,
             indexSlotGroup: null
@@ -259,6 +262,7 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
             // ... AND only one slot left in slotGroup...
             if (slotGroup.includes(null) && capturedSlots.length == Gameboard.boardGridSize - 1) {
                 cpuAboutToWin = true;
+                cpuWinningIndexSlotGroup = indexSlotGroup.slice(0);
                 console.log(`Cpu player ${Player.currentPlayer.id} says "Check!"`);
             }
 
@@ -272,6 +276,7 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
             // ... AND only one slot left in slotGroup
             if (slotGroup.includes(null) && capturedSlots.length == Gameboard.boardGridSize - 1) {
                 cpuOpponentAboutToWin = true;
+                cpuOpponentWinningIndexSlotGroup = indexSlotGroup.slice(0);
                 console.log(`Cpu's opponent says "Check!"`);
             }
 
@@ -292,9 +297,19 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
         if (cpuAboutToWin) {
             // cpu should play into the final dominated slot and claim victory
             console.log(`Cpu player ${Player.currentPlayer.id} hits it!`);
+            for (let slotIndex of cpuWinningIndexSlotGroup) {
+                if (Gameboard.getSlots()[slotIndex] == null) {
+                    Gameboard.captureSlot(slotIndex);
+                }
+            }
         } else if (cpuOpponentAboutToWin) {
             // cpu play into the final opposing slot and hinder opponent's win
-            console.log(`Cpu player ${Player.currentPlayer.id} defends!`)
+            console.log(`Cpu player ${Player.currentPlayer.id} defends!`);
+            for (let slotIndex of cpuOpponentWinningIndexSlotGroup) {
+                if (Gameboard.getSlots()[slotIndex] == null) {
+                    Gameboard.captureSlot(slotIndex);
+                }
+            }
         } else if (maxSoloGroup.indexSlotGroup != null) {
             // this means there is a group solo-owned and most-captured by cpu, 
             // so get a null slot in the group and capture it to increase dominance
