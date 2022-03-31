@@ -78,14 +78,7 @@ let Gameboard = (function() {
                 slot.classList.add("slot");
                 slot.setAttribute("data-slot", i);
                 slot.setAttribute("data-team", "");
-                slot.addEventListener("click", () => {
-                    if (Player.currentPlayer.isHuman) {
-                        let team = Player.currentPlayer.team;
-                        slots[Number(slot.getAttribute("data-slot"))] = team;
-                        slot.setAttribute("data-team", team);
-                        slot.textContent = team;
-                    }
-                });
+
                 document.querySelector(".board").appendChild(slot);
             }
 
@@ -193,12 +186,18 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
 
     document.querySelectorAll(".slot").forEach((slot) => {
         slot.addEventListener("click", () => {
-            // TODO: only allow all this if slot hasn't been captured
+            // abort if slot has been captured
+            let slotIndex = slot.getAttribute("data-slot");
+            if (Gameboard.getSlots()[slotIndex])
+                return;
 
             // only take human input if current player is human
             if (Player.currentPlayer.isHuman) {
+                Gameboard.captureSlot(Number(slot.getAttribute("data-slot")));
+
                 playerTurn();
             }
+
         });
     });
 
@@ -296,7 +295,7 @@ let p2 = Player.CreatePlayer(2, isHuman = false);
 
         if (cpuAboutToWin) {
             // cpu should play into the final dominated slot and claim victory
-            console.log(`Cpu player ${Player.currentPlayer.id} hits it!`);
+            console.log(`Cpu player ${Player.currentPlayer.id} nails it!`);
             for (let slotIndex of cpuWinningIndexSlotGroup) {
                 if (Gameboard.getSlots()[slotIndex] == null) {
                     Gameboard.captureSlot(slotIndex);
