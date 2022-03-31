@@ -20,7 +20,7 @@ div.board {
 }
 
 .winner-display {
-    color: limegreen;
+    color: rgb(238, 255, 0);
 }
 
 .bottom-section {
