@@ -3,7 +3,10 @@
  * @param _array 
  * @returns a shuffled copy of the array
  */
-export function shuffledArray(array) {
+export function shuffledArray(array, nTimes) {
+    if (nTimes == null)
+        nTimes = 1;
+
     // make a copy to be operated on
     let _array = array.slice(0);
 
@@ -16,5 +19,8 @@ export function shuffledArray(array) {
         buffer.push(_array[randomIndex]);
         _array.splice(randomIndex, 1);
     }
-    return buffer;
+    if (nTimes > 1)
+        return shuffledArray(buffer, nTimes - 1)
+    else
+        return buffer;
 }

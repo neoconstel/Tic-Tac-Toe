@@ -109,11 +109,7 @@ export let Gameboard = (function() {
 
     function getSlotGroups(shuffled) {
         // return a copy so it can't be modified from outside
-
-        if (shuffled == null)
-            return allSlotGroups.slice(0);
-        else if (shuffled == true)
-            return shuffledArray(allSlotGroups.slice(0));
+        return allSlotGroups.slice(0);
     }
 
     // this function is for the cpu to play
@@ -279,7 +275,8 @@ export function gamePlay() {
             indexSlotGroup: null
         };
 
-        for (let indexSlotGroup of Gameboard.getSlotGroups(true)) { // indexSlotGroup e.g [0, 3, 6] -- holds index
+
+        for (let indexSlotGroup of shuffledArray(Gameboard.getSlotGroups(), 2)) { // indexSlotGroup e.g [0, 3, 6] -- holds index
             let slotGroup = indexSlotGroup.map((x) => { // slotGroup e.g [1, 1, null] -- holds team
                 return Gameboard.getSlots()[x];
             });
