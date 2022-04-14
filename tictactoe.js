@@ -1,6 +1,10 @@
+// ---------imports------------
+import { shuffledArray } from "./functions.js";
+
+
 // ----------------------modules and functions----------------------
 
-let Gameboard = (function() {
+export let Gameboard = (function() {
     let slots;
     let rows;
     let cols;
@@ -103,9 +107,13 @@ let Gameboard = (function() {
         return slots.slice(0);
     }
 
-    function getSlotGroups() {
+    function getSlotGroups(shuffled) {
         // return a copy so it can't be modified from outside
-        return allSlotGroups.slice(0);
+
+        if (shuffled == null)
+            return allSlotGroups.slice(0);
+        else if (shuffled == true)
+            return shuffledArray(allSlotGroups.slice(0));
     }
 
     // this function is for the cpu to play
@@ -131,14 +139,14 @@ let Gameboard = (function() {
 })();
 
 
-let Player = (function() {
+export let Player = (function() {
     let numPlayers = 0;
     let teams = [];
     let players = [];
     let currentPlayer = null;
 
     function CreatePlayer(team, isHuman) {
-        player = Object.create(null);
+        let player = Object.create(null);
         player.id = ++numPlayers;
         player.isHuman = isHuman;
         player.team = team;
@@ -191,13 +199,13 @@ let Player = (function() {
 })();
 
 
-function gamePlay() {
+export function gamePlay() {
 
     let gridSize = Number(document.querySelector(".grid-size").value);
     Gameboard.init(gridSize = gridSize);
 
-    let p1 = Player.CreatePlayer(1, isHuman = true);
-    let p2 = Player.CreatePlayer(2, isHuman = false);
+    let p1 = Player.CreatePlayer(1, true);
+    let p2 = Player.CreatePlayer(2, false);
 
     let gameEnded = false;
 
@@ -271,7 +279,7 @@ function gamePlay() {
             indexSlotGroup: null
         };
 
-        for (let indexSlotGroup of Gameboard.getSlotGroups()) { // indexSlotGroup e.g [0, 3, 6] -- holds index
+        for (let indexSlotGroup of Gameboard.getSlotGroups(true)) { // indexSlotGroup e.g [0, 3, 6] -- holds index
             let slotGroup = indexSlotGroup.map((x) => { // slotGroup e.g [1, 1, null] -- holds team
                 return Gameboard.getSlots()[x];
             });
@@ -403,8 +411,8 @@ function gamePlay() {
 
 // ----------------------initializer----------------------
 
-let cpuTimer;
-let gameLoop;
+export let cpuTimer;
+export let gameLoop;
 
 document.querySelector(".new-game").addEventListener("click", () => {
     clearTimeout(cpuTimer);
